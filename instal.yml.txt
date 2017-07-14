@@ -1,0 +1,14 @@
+---
+- hosts: servera.example.local
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: name=httpd state=latest
+  - name: start the serves
+    service: name=httpd state=started enabled=yes
+  - name: create index.html
+    file: path=/var/www/html/index.html state=touch
+  - name: create content in the index.html
+    lineinfile: dest=/var/www/html/index.html state=present line=welcome{{ansible_hostname}}
+  - name: firewalld rules
+    firewalld: service=https permanent=true state=enabled
